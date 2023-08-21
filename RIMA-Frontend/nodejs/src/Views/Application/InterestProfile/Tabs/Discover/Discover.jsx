@@ -1,26 +1,14 @@
-import {
-  Button,
-  Checkbox,
-  CircularProgress,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  Menu,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  Typography
-} from "@material-ui/core";
-import FilterListIcon from "@material-ui/icons/FilterList";
-import React, {useEffect, useState} from "react";
-import GetNodeLink from "./GetNodeLinkDiscover";
-import RestAPI from "../../../../../Services/api";
-
+import React, { useEffect, useState } from 'react';
+import { Button, Checkbox, CircularProgress, FormControl, FormControlLabel, FormLabel, Grid, Menu, MenuItem, Radio, RadioGroup, Typography } from '@material-ui/core';import FilterListIcon from '@material-ui/icons/FilterList';
+import GetNodeLink from './GetNodeLinkDiscover';
+import RestAPI from '../../../../../Services/api';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import { IconButton } from '@mui/material';
 
 const DiscoverPage = (props) => {
-  //const [interests, setInterests] = useState([]);
-  const {data, interests, setInterests, setData}=props
+  const { data, interests, setInterests, setData } = props;
+  const [showPopup, setShowPopup] = useState(false);
   const [state, setState] = useState({
     openInterest: null,
     openCategory: null,
@@ -28,42 +16,63 @@ const DiscoverPage = (props) => {
     currCategoriesValue: false,
     currInterestData: null,
     currInterest: false,
-    currData: []
+    currData: [],
   });
-  //const [data, setData] = useState()
   const [keywords, setKeywords] = useState([]);
-  const [checkNewKeywords, setCheckNewKeywords] = useState(false)
+  const [checkNewKeywords, setCheckNewKeywords] = useState(false);
+  const [zoomFactor, setZoomFactor] = useState(1); // Zoomfaktor (Standard: 1)
 
-  let currentUser = JSON.parse(localStorage.getItem("rimaUser"));
+  let currentUser = JSON.parse(localStorage.getItem('rimaUser'));
 
   const fetchKeywords = async () => {
-    //setState({...state,userInterests: []})
-    const response = await RestAPI.longTermInterest(currentUser);
-    const {data} = response;
-    let dataArray = [];
-    let curInterests = []
-    data.map((d) => {
-      //console.log(d, "test")
-      curInterests.push(d.keyword)
-      const {id, categories, original_keywords, original_keywords_with_weights, source, keyword, weight, papers} = d;
-      let newData = {
-        id: id,
-        categories: categories,
-        originalKeywords: original_keywords,
-        originalKeywordsWithWeights: original_keywords_with_weights,
-        source: source,
-        text: keyword,
-        value: weight,
-        papers: papers,
-      };
-      dataArray.push(newData);
-    })
-    setKeywords(dataArray);
-    console.log(curInterests, "test fetch")
-    return curInterests
+  //setState({...state,userInterests: []})
+  const response = await RestAPI.longTermInterest(currentUser);
+  const {data} = response;
+  let dataArray = [];
+  let curInterests = []
+  data.map((d) => {
+    //console.log(d, "test")
+    curInterests.push(d.keyword)
+    const {id, categories, original_keywords, original_keywords_with_weights, source, keyword, weight, papers} = d;
+    let newData = {
+      id: id,
+      categories: categories,
+      originalKeywords: original_keywords,
+      originalKeywordsWithWeights: original_keywords_with_weights,
+      source: source,
+      text: keyword,
+      value: weight,
+      papers: papers,
+    };
+    dataArray.push(newData);
+  })
+  setKeywords(dataArray);
+  console.log(curInterests, "test fetch")
+  return curInterests
 
-  };
+};
+// Restlicher Code ...
+const handleOpenPopup = () => {
+  setShowPopup(true);
+};
 
+const handleClosePopup = () => {
+  setShowPopup(false);
+};
+
+
+const handleZoomOut = () => {
+  setZoomFactor(prevZoom => Math.max(prevZoom * 0.9, 0.1));
+};
+
+
+const handleZoomIn = () => {
+  setZoomFactor(prevZoom => prevZoom * 1.1); // Increase zoom factor by 10%
+};
+
+const handleInfoButtonClick = () => {
+  setState({ ...state, infoDialogOpen: true });
+};
 
   const compareInterests = async () => {
     setCheckNewKeywords(false)
@@ -125,7 +134,7 @@ const DiscoverPage = (props) => {
         setCheckNewKeywords(true)
       }
 
-    }
+    } 
 
 
 
@@ -265,12 +274,20 @@ const DiscoverPage = (props) => {
     setState({...state, currCategoriesValue: currValuesCategories});
   };
 
+
   return (
     <>
-      <Grid container justify="flex-end" style={{paddingTop: 24, paddingBottom: 8}}>
-        <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenInterest}>
-          Choose interest
+      <Grid container justify="flex-end" style={{ paddingTop: 24, paddingBottom: 8 }}>
+         <Button startIcon={<FilterListIcon />} color="primary" onClick={handleOpenInterest}>
+           Choose interest
         </Button>
+        <Button startIcon={<FilterListIcon />} color="primary" onClick={handleOpenCategory} style={{ marginRight: 8 }}>
+           Field of Study
+        </Button>
+         <IconButton aria-label="more information" color="primary" onClick={handleOpenPopup}>
+          <InfoOutlinedIcon />
+        </IconButton>
+      {showPopup && <Popup onClose={handleClosePopup} />}
         <Menu
           id="currInterestDiscover"
           anchorEl={state.openInterest}
@@ -300,9 +317,6 @@ const DiscoverPage = (props) => {
             </RadioGroup>:<></>}
           </FormControl>
         </Menu>
-        <Button startIcon={<FilterListIcon/>} color="primary" onClick={handleOpenCategory} style={{marginLeft: 8}}>
-          Field of Study
-        </Button>
         {state.currCategoriesLabel?<Menu
             id="filterInterestExplore"
             anchorEl={state.openCategory}
@@ -310,6 +324,7 @@ const DiscoverPage = (props) => {
             open={Boolean(state.openCategory)}
             onClose={handleCloseCategory}
         >
+          
           {state.currCategoriesLabel.map((cat, index) => {
             let label = cat;
             let check = state.currCategoriesValue[index];
@@ -326,7 +341,7 @@ const DiscoverPage = (props) => {
             );
           })}
         </Menu>:<></>}
-      </Grid>
+</Grid>
       <Grid container>
         <Grid item xs={1}/>
         <Grid item xs={10}>
@@ -341,16 +356,26 @@ const DiscoverPage = (props) => {
             <Loading/>
           )}
         </Grid>
-        <Grid item xs={1}/>
-      </Grid>
+    </Grid>
     </>
   );
 };
 
-export default DiscoverPage;
-
-export const Loading = () => {
+const Popup = ({ onClose }) => {
   return (
+    <div>
+      <h3 style={{ fontFamily: 'Arial, sans-serif' }}>Information:</h3>
+      <p style={{ fontFamily: 'Arial, sans-serif' }}>On this page, you can explore interests that go beyond your usual topics. 
+      These controversial interests aim to introduce you to new subject areas and expand your knowledge.</p>
+      <button onClick={onClose}>Close</button>
+    </div>
+  );
+};
+
+
+export default DiscoverPage;
+export const Loading = () => {
+     return (
     <>
       <Grid
         container
@@ -366,5 +391,5 @@ export const Loading = () => {
         </Grid>
       </Grid>
     </>
-  )
-}
+  )};
+
