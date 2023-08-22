@@ -119,16 +119,16 @@ function getNodeData(data, values, interest) {
 }
 
 const GetNodeLink = (props) => {
-var cytoscape = require('cytoscape');
-var panzoom = require('cytoscape-panzoom');
-panzoom( cytoscape ); 
-  const {interest, categoriesChecked, data, keywords} = props;
-  const [openDialog, setOpenDialog] = useState({
+ var cytoscape = require('cytoscape');
+ var panzoom = require('cytoscape-panzoom');
+ panzoom( cytoscape ); 
+ const {interest, categoriesChecked, data, keywords} = props;
+ const [openDialog, setOpenDialog] = useState({
     openLearn: null,
     nodeObj: null
   });
 
-  const panzoomOptions = {
+ const panzoomOptions = {
     zoomFactor: 0.1, // Faktor für die Zoomstufe
     zoomDelay: 45, // Verzögerung (in ms) für die Zoomaktion
     minZoom: 0.1, // Minimale Zoomstufe
@@ -137,7 +137,7 @@ panzoom( cytoscape );
     panSpeed: 15, // Geschwindigkeit des Pannens
     panDistance: 10, // Entfernung, um zu pannen 
     zIndex: 9999, 
-  };
+ };
   const handleDeleteItem = (item) => {
     // Filtere den Eintrag aus der Liste
     const updatedList = addNewFavourUrl.filter((i) => i.text !== item.text);
@@ -147,27 +147,37 @@ panzoom( cytoscape );
     setAddNewFavourUrl(updatedList);
     setAddNewFavour(updatedList2);
   };
-  
+
+//   const reload2 = async (interest) => {
+//   RestAPI.getRelatedNewTopics(interest).then(res=>{
+//     const {data}=res
+//     console.log(res, "Related")
+//     console.log("done data Discover")
+//     return res
+//   })
+// }
+
   const reload = async (interest) => {
     //setState({...state,userInterests: []})
-    const response = await RestAPI.getTopicsRelated(interest);
-    console.log(response,"xxxx", "1");
-    const data = response;
+    const response = await RestAPI.getRelatedNewTopics(interest);
+    const {data} = response;
     let dataArray = [];
-    data.foreach((d) => {
+    console.log(response,"related");
+    data.forEach((d) => {
       //console.log(d, "test")
-      //const {title, summary, url, interest, failure} = d;
+      const {title, summary, url, interest, failure} = d;
       const newData = {
-        title: d.title,
-        summary: d.summary,
-        url: d.url,
-        interest: d.interest,
-        failure: d.failure,
+        title: title,
+        summary: summary,
+        url: url,
+        interest: interest,
+        failure: failure,
       };
       dataArray.push(newData);
     })
     return dataArray
   };
+
   const reloadold = async (interest) => {
 
     const response = await RestAPI.getTopicsRelated(interest);
@@ -187,6 +197,7 @@ panzoom( cytoscape );
     });
     return nodes
   };
+  
   const [addNewFavour, setAddNewFavour] = useState([]); 
   const [addNewFavourUrl, setAddNewFavourUrl] = useState([]);
 
@@ -445,7 +456,7 @@ panzoom( cytoscape );
                 content: "Reload",
                 contentStyle: {fontSize: "14px"},
                 select: function (ele) {
-                  let list = reload(ele.data()["label"])[0];
+                  let list = reload(ele.data()["label"]);
                   console.log(list, "xxxx");
                   ele.successors().addClass("collapsed");
                   let succ = ele.successors().targets();

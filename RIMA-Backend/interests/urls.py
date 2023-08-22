@@ -42,7 +42,8 @@ urlpatterns = [
     path('get-discover-data', views.get_data_discover),
     path('get-explore-data', views.get_data_explore),
     path('get-similiar-interest-data', views.get_data_similiar_interest),
-
+    # DiscoverGroup
+    path('get-related-new-topics',views.get_new_related_topics),
     #Osama
     path('papers/', views.PaperView.as_view()), #adding new paper
     path('reset-data/', views.ResetData.as_view()),

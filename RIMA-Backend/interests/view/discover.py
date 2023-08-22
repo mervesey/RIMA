@@ -29,7 +29,7 @@ def getRandPages(pages, n):
     return currPages
 
 def getPageData(interest):
-    print(interest, "interests")
+    # print(interest, "interests")
     interest=interest.capitalize()
     try:
         wiki = wikipediaapi.Wikipedia('en')
@@ -98,6 +98,7 @@ def getDataDiscover(interests):
     data={}
     for i in interests:
         data[i]=getDataDiscoverInterest(i.capitalize())
+    #print("\n\n\n", data,"\n\n\n");    
     return data
 
 def changeDataDiscover(data):
@@ -114,18 +115,35 @@ def changeDataDiscover(data):
 
         else:
             newData[i]=oldData[i]
+    #print("\n\n\n", newData,"\n\n\n");        
     #print("old ",oldInterests)
     #for i in oldInterests:
     #   if i not in interests:
     #       del oldData[i]
     return newData
 
-
-
-
-
-
-
+def getNewRelatedTopics(category):
+    data=[]
+    listPageData=[]
+    allPages=getPagesInCategory(category)
+    try:
+        pages=getRandPages(allPages,3)
+    except:
+        pages=[]
+    for page in pages:
+        pageData=getPageData(page)
+        if pageData == "error":
+            continue
+        else:
+            listPageData.append(pageData)
+    dataCat = {
+         "topic":category,
+         "color": "#397367",
+         "allPages":allPages,
+         "relatedTopics":listPageData
+        }
+    data.append(dataCat)
+    return data
 
 
 
