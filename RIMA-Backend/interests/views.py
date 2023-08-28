@@ -56,6 +56,7 @@ from .my_interests import getDataNewInterestExplore
 
 from .view.discover import getDataDiscover
 from .view.discover import getNewRelatedTopics
+from .view.discover import blibla
 from .view.explore import getDataExplore
 from .view.connect import getConnectData
 from .view.connect import getWikiInfo
@@ -234,7 +235,13 @@ def recommended_keywords_similarities(request, *args, **kwargs):
 @api_view(["post"])
 def get_new_related_topics(request, *args, **kwargs):
     res =getNewRelatedTopics(request.data)
-    print(request.data)
+    #two list: random and all interests
+    return Response({"message": "Successful", "data": res})
+#Test
+@api_view(["post"])
+def bliblablub(request, *args, **kwargs):
+    res =blibla(request.data)
+    
     #two list: random and all interests
     return Response({"message": "Successful", "data": res})
 

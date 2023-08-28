@@ -148,16 +148,16 @@ const GetNodeLink = (props) => {
     setAddNewFavour(updatedList2);
   };
 
-//   const reload2 = async (interest) => {
-//   RestAPI.getRelatedNewTopics(interest).then(res=>{
-//     const {data}=res
-//     console.log(res, "Related")
-//     console.log("done data Discover")
-//     return res
-//   })
-// }
-
   const reload = async (interest) => {
+  RestAPI.getRelatedNewTopics(interest).then(res=>{
+     const {data}=res
+     console.log(res, "Related")
+     console.log("done data Discover")
+     return res
+   })
+ }
+
+  const reload2 = async (interest) => {
     //setState({...state,userInterests: []})
     const response = await RestAPI.getRelatedNewTopics(interest);
     const {data} = response;

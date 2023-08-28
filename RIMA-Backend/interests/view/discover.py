@@ -137,13 +137,17 @@ def getNewRelatedTopics(category):
         else:
             listPageData.append(pageData)
     dataCat = {
-         "topic":category,
+         "data":category,
          "color": "#397367",
          "allPages":allPages,
          "relatedTopics":listPageData
         }
     data.append(dataCat)
     return data
+
+def blibla(data):
+    return{"data":"blibla"}
+
 
 
 

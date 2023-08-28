@@ -273,10 +273,29 @@ const handleInfoButtonClick = () => {
 
     setState({...state, currCategoriesValue: currValuesCategories});
   };
+  // const reload2 = async (interest) => {
+  //   //   RestAPI.getRelatedNewTopics(interest).then(res=>{
+  //   //     const {data}=res
+  //   //     console.log(res, "Related")
+  //   //     console.log("done data Discover")
+  //   //     return res
+  //   //   })
+  // //Test
+  const[blibla,setBliBla]=useState("");
+  const Blibla=()=>{
+    
+    RestAPI.getRelatedNewTopics('e-learning').then(res=>{
+      const {data} = res;
+      const bli = {...data.data};
+      setBliBla(bli);
+    })
+    console.log(blibla, "Test test");
+  };
 
 
   return (
     <>
+      <Button onClick={Blibla}>Blibla</Button>
       <Grid container justify="flex-end" style={{ paddingTop: 24, paddingBottom: 8 }}>
          <Button startIcon={<FilterListIcon />} color="primary" onClick={handleOpenInterest}>
            Choose interest

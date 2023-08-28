@@ -798,11 +798,26 @@ static getListPublications(conference_name_abbr,author_id) {
   }
   //GroupDiscover
   static getRelatedNewTopics(data) {
-    console.log(data);
+    //console.log(data);
     const TOKEN = getItem("accessToken");
     return axios({
       method: "POST",
       url: `${BASE_URL}/api/interests/get-related-new-topics`,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Token ${TOKEN}`,
+      },
+      data: data,
+    }).then((res) => res);
+  }
+
+  //Test
+  static bliblablub(data) {
+    const TOKEN = getItem("accessToken");
+    return axios({
+      method: "POST",
+      url: `${BASE_URL}/api/interests/blibla`,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
