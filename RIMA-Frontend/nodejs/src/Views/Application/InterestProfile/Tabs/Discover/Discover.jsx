@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, CircularProgress, FormControl, FormControlLabel, FormLabel, Grid, Menu, MenuItem, Radio, RadioGroup, Typography } from '@material-ui/core';import FilterListIcon from '@material-ui/icons/FilterList';
 import GetNodeLink from './GetNodeLinkDiscover';
 import RestAPI from '../../../../../Services/api';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+// import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { IconButton } from '@mui/material';
+import { Box } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 const DiscoverPage = (props) => {
   const { data, interests, setInterests, setData } = props;
@@ -20,7 +22,7 @@ const DiscoverPage = (props) => {
   });
   const [keywords, setKeywords] = useState([]);
   const [checkNewKeywords, setCheckNewKeywords] = useState(false);
-  const [zoomFactor, setZoomFactor] = useState(1); // Zoomfaktor (Standard: 1)
+  // const [zoomFactor, setZoomFactor] = useState(1); // Zoomfaktor (Standard: 1)
 
   let currentUser = JSON.parse(localStorage.getItem('rimaUser'));
 
@@ -58,16 +60,6 @@ const handleOpenPopup = () => {
 
 const handleClosePopup = () => {
   setShowPopup(false);
-};
-
-
-const handleZoomOut = () => {
-  setZoomFactor(prevZoom => Math.max(prevZoom * 0.9, 0.1));
-};
-
-
-const handleZoomIn = () => {
-  setZoomFactor(prevZoom => prevZoom * 1.1); // Increase zoom factor by 10%
 };
 
 const handleInfoButtonClick = () => {
@@ -140,12 +132,6 @@ const handleInfoButtonClick = () => {
 
 
   }
-
-
-
-
-
-
   useEffect(() => {
       setCheckNewKeywords(false)
       if (data) {
@@ -274,17 +260,18 @@ const handleInfoButtonClick = () => {
     setState({...state, currCategoriesValue: currValuesCategories});
   };
   // const reload2 = async (interest) => {
-  //   //   RestAPI.getRelatedNewTopics(interest).then(res=>{
-  //   //     const {data}=res
-  //   //     console.log(res, "Related")
-  //   //     console.log("done data Discover")
-  //   //     return res
-  //   //   })
-  // //Test
+  //     RestAPI.getRelatedNewTopics(interest).then(res=>{
+  //       const {data}=res
+  //       console.log(res, "Related")
+  //       console.log("done data Discover")
+  //        return res
+  //     })
+
+  //Test
   const[blibla,setBliBla]=useState("");
   const Blibla=()=>{
     
-    RestAPI.getRelatedNewTopics('e-learning').then(res=>{
+    RestAPI.getRelatedNewTopics({'data':'12'}).then(res=>{
       const {data} = res;
       const bli = {...data.data};
       setBliBla(bli);
@@ -382,12 +369,36 @@ const handleInfoButtonClick = () => {
 
 const Popup = ({ onClose }) => {
   return (
-    <div>
-      <h3 style={{ fontFamily: 'Arial, sans-serif' }}>Information:</h3>
-      <p style={{ fontFamily: 'Arial, sans-serif' }}>On this page, you can explore interests that go beyond your usual topics. 
-      These controversial interests aim to introduce you to new subject areas and expand your knowledge.</p>
-      <button onClick={onClose}>Close</button>
-    </div>
+    <Box
+      position="relative"
+      padding="14px"
+      backgroundColor="#172B4D"  
+      borderRadius="8px"
+      boxShadow="0px 2px 6px rgba(0, 0, 0, 0.5)"  // Shadow
+    >
+      <IconButton
+        aria-label="close"
+        onClick={onClose}
+        style={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          color: '#172B4D',  // Blue close icon color
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+      <div>
+        <Typography variant="h6" style={{ marginBottom: '5px' }}>
+          Information
+        </Typography>
+        <Typography variant="body1">
+          On this page, you can explore interests that go beyond your usual topics.
+          These controversial interests aim to introduce you to new subject areas and expand your knowledge.
+          Moreover you can add interests to your favourite interests list down below.
+        </Typography>
+      </div>
+    </Box>
   );
 };
 
