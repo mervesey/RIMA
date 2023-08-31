@@ -112,6 +112,7 @@ function getNodeData(data, values, interest) {
     ];
     
   }
+  console.log(elements,'xx')
   return elements;
 }
 
@@ -131,77 +132,105 @@ const {interest, categoriesChecked, data, keywords} = props;
     openLearn: null,
     nodeObj: null
   });
+  
+// Contains data from backend
+ const[list,setList]=useState("");
 
-  const reload2 = async (interest) => {
-  RestAPI.getRelatedNewTopics(interest).then(res=>{
-     const {data}=res
-     console.log(res, "Related")
-     console.log("done data Discover")
-     return res
-   })
- }
- 
- async function updateRelatedTopics(data, targetTopic) {
-  try {
-    const res = await RestAPI.getRelatedNewTopics({'data': '12'});  // Hier rufst du deine API auf, um die neuen Themen zu erhalten
-    const { data: newRelatedTopics } = res;
-    
-    for (const entry of data) {
-      if (entry.topic === targetTopic) {
-        entry.relatedTopics = newRelatedTopics[0].relatedTopics;
-        console.log(`Die verwandten Themen für '${targetTopic}' wurden aktualisiert.`);
-        return data;
+// Data from the backend is received and covert to a new array
+  const reloadfinal=()=>{
+    RestAPI.getRelatedNewTopics({'data':'12'}).then(res=>{
+      const {data} = res;
+      const dataRes = {...data.data};
+      setList(dataRes);
+    })
+    let nlist = convertToNewLabelArray(list.relatedTopics);
+    return nlist;
+  //  let l=  [{label: 'y1', pageData: 'text', url: 'url'}, {label: 'y1', pageData: 'text2', url: 'url2' },{label: 'y2', pageData: 'text3', url: 'url3'}]
+  };
+
+// converts array
+  function convertToNewLabelArray(dataArray) {
+    try {
+      const newArray = dataArray.map(item => {
+        if (item.title && item.summary && item.url) {
+          return {
+            label: item.title,
+            pageData: item.summary,
+            url: item.url
+          };
+        } else {
+          throw new Error("Ungültiges Objektformat");
+        }
+      });
+
+      return newArray;
+    } catch (error) {
+      console.error("Fehler beim Konvertieren des Arrays:", error);
+      return [];
+    }
+  }
+
+
+  // test1
+  function updateDataWithNewValues(existingData, newData, source) {
+    // Erzeuge Liste liste1 mit Zielen, die als source die übergebene source haben
+    const liste1 = existingData.filter(node => node.classes && node.data.source === source);
+  
+    // Erzeuge liste2 mit den Elementen, bei denen id in liste1.target ist
+    const liste2 = existingData.filter(node => liste1.some(item => item.classes === ['level2'] && item.data.target === node.data.id));
+  
+    // Iteriere durch liste2 und aktualisiere label, pageData und url
+    for (const node of liste2) {
+      const matchedNewValue = newData.find(item => item.label === node.data.label);
+      if (matchedNewValue) {
+        node.data.label = matchedNewValue.label;
+        node.data.pageData = matchedNewValue.pageData;
+        node.data.url = matchedNewValue.url;
       }
     }
-    console.log(`Das Thema '${targetTopic}' wurde nicht im Datensatz gefunden.`);
-    return data;
-  } catch (error) {
-    console.error('Fehler beim Abrufen der neuen verwandten Themen:', error);
-    return data;
+  
+    return existingData;
   }
-}
 
-// Data from the backend is received
-  const reload = async (interest) => {
-    //setState({...state,userInterests: []})
-    const response = await RestAPI.getRelatedNewTopics(interest);
-    const {data} = response;
-    let dataArray = [];
-    console.log(response,"related");
-    data.forEach((d) => {
-      //console.log(d, "test")
-      const {title, summary, url, interest, failure} = d;
-      const newData = {
-        title: title,
-        summary: summary,
-        url: url,
-        interest: interest,
-        failure: failure,
-      };
-      dataArray.push(newData);
-    })
-    return dataArray
-  };
 
-  const reloadold = async (interest) => {
+  // const reload = async (interest) => {
+  //   //setState({...state,userInterests: []})
+  //   const response = await RestAPI.getRelatedNewTopics(interest);
+  //   const {data} = response;
+  //   let dataArray = [];
+  //   console.log(response,"related");
+  //   data.forEach((d) => {
+  //     //console.log(d, "test")
+  //     const newData = {
+  //       title: d.title,
+  //       summary: d.summary,
+  //       url: d.url,
+  //       interest: d.interest,
+  //       failure: d.failure,
+  //     };
+  //     dataArray.push(newData);
+  //   })
+  // };
 
-    const response = await RestAPI.getRelatedNewTopics(interest);
-    const dataArray = response;
-    const nodes = [];
-    dataArray.forEach((item) => {
-      const node = {
-        data: {
-          id: "a",
-          title: "b",
-          summary: "c",
-          url: "url",
-          failure: "failure"
-        }
-      };
-      nodes.push(node);
-    });
-    return nodes
-  };
+  // const reloadold = async (interest) => {
+
+  //   const response = await RestAPI.getRelatedNewTopics(interest);
+  //   const dataArray = response;
+  //   const nodes = [];
+  //   dataArray.forEach((item) => {
+  //     const node = {
+  //       data: {
+  //         id: "a",
+  //         title: "b",
+  //         summary: "c",
+  //         url: "url",
+  //         failure: "failure"
+  //       }
+  //     };
+  //     nodes.push(node);
+  //   });
+  //   return nodes
+  // };
   
   // Favour Interest Feature 
   const [addNewFavourUrl, setAddNewFavourUrl] = useState([]); //list of favored interests 
@@ -241,13 +270,6 @@ const {interest, categoriesChecked, data, keywords} = props;
       });
     }
   };
-  const handleDeleteItem = (item) => {
-    // Filter the entry from the list
-    const updatedList = addNewFavourUrl.filter((i) => i.label.toLowerCase() !== item.label.toLowerCase());    
-    // Update the state 
-    setAddNewFavourUrl(updatedList);
-  };
-
   const validateInterest = (interests, interest) => {
     return interests.some((i) => i.text === interest());
   };
@@ -472,19 +494,17 @@ const {interest, categoriesChecked, data, keywords} = props;
       }
     }
   ];
-  // const panzoomstyle = `
-  // .panzoom-container {
-  //   position: relative;
-  //   z-index: -1;
-  // } `;
-
+ 
+function generateUniqueId() {
+  return Date.now().toString() + Math.random().toString(36);
+}
 
   return (
     <>
     <div style={{ display: "flex" }}>
     <div style={{ flex: 1 }}>
       <CytoscapeComponent
-        elements={elements}
+        // elements={elements}
         style={{width: "100%", height: "800px", backgroundColor: "#F8F4F2"}}
         layout={layoutGraph}
         stylesheet={stylesheet}
@@ -492,7 +512,7 @@ const {interest, categoriesChecked, data, keywords} = props;
           cy.userZoomingEnabled(false); //disable the zoom option with the mouse
           cy.elements().remove();
           cy.add(elements);
-          //cy.layout(layoutGraph)
+          cy.layout(layoutGraph)
           cy.layout(layoutGraph).run();
           cy.fit();
           cy.panzoom(panzoomOptions);
@@ -502,29 +522,47 @@ const {interest, categoriesChecked, data, keywords} = props;
             commands: [
               {
                 content: "Reload new topics",
+                // label, pageData, url
                 contentStyle: {fontSize: "12px"},
                 select: function (ele) {
-                  let newData = updateRelatedTopics(data, ele.data()["label"]);
-                  data = newData;
                   ele.successors().addClass("collapsed");
-                  let succ = ele.successors().targets();
+                  let newList = reloadfinal();
+                  console.log(newList, "newList");
                   let edges = ele.successors();
                   let ids = [];
-                  edges.map((e) => {
-                    e.removeClass("collapsed");
-                    ids.push(
-                      e.data()["target"],
-                      e.data()["source"],
-                      e.data()["id"]
-                    );
-                    console.log(ids, "test");
-                  });
-
-                  /*succ.map((s) => {
-                    s.removeClass("collapsed");
-                  });*/
-                  cy.fit([ele, succ, edges], 16);
-              },
+                  for (const newItem of newList) {
+                    let newId = generateUniqueId(); // Funktion zum Erzeugen einer eindeutigen ID
+                    let newNodeData = {
+                      classes: ["level2"],
+                      data: {
+                        id: newId.toString(),
+                        label: newItem.label,
+                        pageData: newItem.pageData,
+                        url: newItem.url,
+                        color: "#666", // Setze die gewünschte Farbe
+                      },
+                    };
+                    let newEdgeData = {
+                      classes: [],
+                      data: {
+                        source: ele.data()["id"].toString(),
+                        target: newId.toString(),
+                        color: "#666", 
+                        id: generateUniqueId() 
+                      },
+                    };
+                
+                    ids.push(newId);
+                    cy.elements().remove();
+                    elements.push(newNodeData, newEdgeData);
+                    console.log(elements,'cc')
+                    cy.add(elements);
+                    cy.layout(layoutGraph)
+                    cy.layout(layoutGraph).run();
+                    cy.fit([ele, ...edges], 16);
+                  }
+                  // cy.fit([ele, ...edges], 16);
+                },
               enabled: true
             },
             {content: "Remove", // html/text content to be displayed in the menu
@@ -627,10 +665,8 @@ const {interest, categoriesChecked, data, keywords} = props;
             atMouse: false, // draw menu at mouse position
             outsideMenuCancel: 8 // if set to a number, this will cancel the command if the pointer is released outside of the spotlight, padded by the number given
           };
-
           let menu2 = cy.cxtmenu(defaultsLevel2);
           let menu1 = cy.cxtmenu(defaultsLevel1);
-          
         }
       }
       />

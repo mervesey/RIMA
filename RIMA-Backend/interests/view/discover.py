@@ -112,8 +112,6 @@ def changeDataDiscover(data):
         if i not in oldData:
 
             newData[i]=getDataDiscoverInterest(i.capitalize())
-
-
         else:
             newData[i]=oldData[i]
     #print("\n\n\n", newData,"\n\n\n");        
