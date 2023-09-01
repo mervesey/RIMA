@@ -122,15 +122,15 @@ def changeDataDiscover(data):
     return newData
 
 def getNewRelatedTopics(category):
-    # data=[]
-    # listPageData=[]
-    # allPages=getPagesInCategory(category)
+    # data=[] # Initialize an empty list to store data
+    # listPageData=[] # Initialize an empty list to store page data
+    # allPages=getPagesInCategory(category) # Get all pages in the specified category
     # try:
-    #     pages=getRandPages(allPages,3)
+    #     pages=getRandPages(allPages,3) # Get a random selection of 3 pages from allPages
     # except:
     #     pages=[]
     # for page in pages:
-    #     pageData=getPageData(page)
+    #     pageData=getPageData(page) # Get data for each page
     #     if pageData == "error":
     #         continue
     #     else:
@@ -138,10 +138,10 @@ def getNewRelatedTopics(category):
     # dataCat = {
     #      "relatedTopics":listPageData
     #     }
-    dataCat =  {'relatedTopics': [
-            {'title': 'x1', 'summary': 'text', 'url': 'https://en.wikipedia.org/wiki/Online_tutoring', 'interest': 'New Related Topic 1', 'failure': False},
-            {'title': 'y1', 'summary': 'text', 'url': 'https://en.wikipedia.org/wiki/Online_tutoring', 'interest': 'New Related Topic 2', 'failure': False},
-            {'title': 'yd', 'summary': 'text', 'url': 'https://en.wikipedia.org/wiki/Online_tutoring', 'interest': 'New Related Topic 2', 'failure': False}]}
+    dataCat =  {'relatedTopics': [ 
+            {'title': 'Active SETI', 'summary': 'text', 'url': 'https://en.wikipedia.org/wiki/Online_tutoring', 'interest': 'New Related Topic 1', 'failure': False},
+            {'title': 'Agricultural technology', 'summary': 'text', 'url': 'https://en.wikipedia.org/wiki/Online_tutoring', 'interest': 'New Related Topic 2', 'failure': False},
+            {'title': 'AIRO Group', 'summary': 'text', 'url': 'https://en.wikipedia.org/wiki/Online_tutoring', 'interest': 'New Related Topic 2', 'failure': False}]}
     return dataCat
 
 def blibla(data):

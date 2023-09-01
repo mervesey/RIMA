@@ -1,14 +1,11 @@
 import CytoscapeComponent from "react-cytoscapejs";
 import cytoscape from "cytoscape";
 import React, {useEffect, useState} from "react";
-import cxtmenu from "cytoscape-cxtmenu";
-import zoom from "cytoscape-cxtmenu";
 import WikiDesc from "../Connect/WikiDesc";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle} from "@material-ui/core";
 import RestAPI from "../../../../../Services/api";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import swal from 'sweetalert';
 import panzoom from "cytoscape-panzoom";
 import "cytoscape-panzoom/cytoscape.js-panzoom.css";
@@ -19,7 +16,7 @@ cytoscape.use(panzoom);
 
 function getColor(currColors) {
   //replace darker colors with lighter ones
-  const allColors = [
+  const allColors = [ 
     "#397367",
     "#EFCB68",
     "#C89FA3",
@@ -117,6 +114,8 @@ function getNodeData(data, values, interest) {
 }
 
 const GetNodeLink = (props) => {
+
+// Panzoom options are defined
  const panzoomOptions = {
   zoomFactor: 0.1, // Factor for the zoom level
   zoomDelay: 45, // Delay (in ms) for the zoom action
@@ -137,8 +136,8 @@ const {interest, categoriesChecked, data, keywords} = props;
  const[list,setList]=useState("");
 
 // Data from the backend is received and covert to a new array
-  const reloadfinal=()=>{
-    RestAPI.getRelatedNewTopics({'data':'12'}).then(res=>{
+  const reload=()=>{
+    RestAPI.getRelatedNewTopics({'data':'technology in society'}).then(res=>{
       const {data} = res;
       const dataRes = {...data.data};
       setList(dataRes);
@@ -148,7 +147,7 @@ const {interest, categoriesChecked, data, keywords} = props;
   //  let l=  [{label: 'y1', pageData: 'text', url: 'url'}, {label: 'y1', pageData: 'text2', url: 'url2' },{label: 'y2', pageData: 'text3', url: 'url3'}]
   };
 
-// converts array
+// Function to convert the data array
   function convertToNewLabelArray(dataArray) {
     try {
       const newArray = dataArray.map(item => {
@@ -159,13 +158,13 @@ const {interest, categoriesChecked, data, keywords} = props;
             url: item.url
           };
         } else {
-          throw new Error("Ungültiges Objektformat");
+          throw new Error("Invalid object format");
         }
       });
 
       return newArray;
     } catch (error) {
-      console.error("Fehler beim Konvertieren des Arrays:", error);
+      console.error("Error while converting the array:", error);
       return [];
     }
   }
@@ -233,8 +232,8 @@ const {interest, categoriesChecked, data, keywords} = props;
   // };
   
   // Favour Interest Feature 
-  const [addNewFavourUrl, setAddNewFavourUrl] = useState([]); //list of favored interests 
-  const [notes, setNotes] = useState({}); // State to hold notes for each item
+  const [addNewFavourUrl, setAddNewFavourUrl] = useState([]); // Define state for the list of favored interests
+  const [notes, setNotes] = useState({}); // Define state to hold notes for each item in the list
   
   // is called when an Intersse is fovourized
   const addFavours= async (currFavour) => {
@@ -242,15 +241,11 @@ const {interest, categoriesChecked, data, keywords} = props;
     console.log("xx Discover get node link", alreadyExist);
     if (!alreadyExist) { 
       console.log("xx Discover get node link already")
-      let newFavour = {
-        label: currFavour.label.toLowerCase(),
-      }
       let newFavourUrl = {
         label: currFavour.label.toLowerCase(),
          url : currFavour.url
        };
-       // If no Wikipedia article is found, redirect to the main page
-      if (currFavour.url == 'en.wikipedia.org'){
+      if (currFavour.url == 'en.wikipedia.org'){// If no Wikipedia article is found, redirect to the main page
         newFavourUrl = {
           label: currFavour.label.toLowerCase(),
           url : 'https://en.wikipedia.org/wiki/Main_Page'
@@ -258,18 +253,19 @@ const {interest, categoriesChecked, data, keywords} = props;
       }
       setAddNewFavourUrl([...addNewFavourUrl,newFavourUrl]); //update addNewFavourUrl
          // Display a success message
-         const msg = `The interest "${currFavour.label}" is added to your favorite interests list`;
+         const msg = `The interest "${currFavour.label}" is added to your favourite interests list`;
          toast.success(msg, {
-           toastId: 'addLevel2',
+           toastId: 'addSuccessfull',
          });
     } else {
       // Display a message indicating that the item already exists
-      const msg = `The interest "${currFavour.label}" is already in your favorite interests list`;
+      const msg = `The interest "${currFavour.label}" is already in your favourite interests list`;
       toast.warning(msg, {
         toastId: 'duplicateInterest'
       });
     }
   };
+
   const validateInterest = (interests, interest) => {
     return interests.some((i) => i.text === interest());
   };
@@ -344,12 +340,12 @@ const {interest, categoriesChecked, data, keywords} = props;
               toast.error(msg, {
                 toastId: "removedLevel1"
               });
-              // Neighbor edges and nodes are also removed
+              // Neighbor edges and nodes are removed
               ele.addClass("collapsed");
               ele.successors().addClass("collapsed");
       } else {
         // The user has clicked on "Cancel"
-        console.log("Entfernung abgebrochen");
+        console.log("Removal canceled");
       }
     });
   }
@@ -378,7 +374,7 @@ const {interest, categoriesChecked, data, keywords} = props;
               ele.addClass("collapsed");
       } else {
         // The user has clicked on "Cancel"
-        console.log("Entfernung abgebrochen");
+        console.log("Removal canceled");
       }
     });
   }
@@ -404,7 +400,7 @@ const {interest, categoriesChecked, data, keywords} = props;
       }
     });
   }
-
+  // User changes the content of the text field
   const handleNotesChange = (itemText, note) => {
     setNotes((prevNotes) => ({
       ...prevNotes,
@@ -422,6 +418,10 @@ const {interest, categoriesChecked, data, keywords} = props;
       return 1;
     }
   };
+  // Generate a unique ID for the new node
+  function generateUniqueId() {
+    return Date.now().toString() + Math.random().toString(36);
+  }
 
 
   const stylesheet = [
@@ -494,10 +494,6 @@ const {interest, categoriesChecked, data, keywords} = props;
       }
     }
   ];
- 
-function generateUniqueId() {
-  return Date.now().toString() + Math.random().toString(36);
-}
 
   return (
     <>
@@ -525,13 +521,15 @@ function generateUniqueId() {
                 // label, pageData, url
                 contentStyle: {fontSize: "12px"},
                 select: function (ele) {
-                  ele.successors().addClass("collapsed");
-                  let newList = reloadfinal();
+                  ele.successors().addClass("collapsed"); //remove successors of the selected element
+                  let newList = reload(); //get a new list of items
                   console.log(newList, "newList");
-                  let edges = ele.successors();
+                  let edges = ele.successors();  // Get the edges of the selected element
                   let ids = [];
+                  // Iterate through the new list and create new nodes and edges
                   for (const newItem of newList) {
-                    let newId = generateUniqueId(); // Funktion zum Erzeugen einer eindeutigen ID
+                    let newId = generateUniqueId(); // Generate a unique ID for the new node
+                    // Define data for the new node
                     let newNodeData = {
                       classes: ["level2"],
                       data: {
@@ -539,16 +537,17 @@ function generateUniqueId() {
                         label: newItem.label,
                         pageData: newItem.pageData,
                         url: newItem.url,
-                        color: "#666", // Setze die gewünschte Farbe
+                        color: "#666",
                       },
                     };
+                     // Define data for the new edge
                     let newEdgeData = {
                       classes: [],
                       data: {
                         source: ele.data()["id"].toString(),
                         target: newId.toString(),
                         color: "#666", 
-                        id: generateUniqueId() 
+                        id: generateUniqueId() // Generate a unique ID for the new node
                       },
                     };
                 
@@ -707,6 +706,7 @@ function generateUniqueId() {
           }}
         >
           <tbody>
+          {/* Iterate through the list of interests and create a row for each item */}
             {addNewFavourUrl.map((item) => (
               <tr key={item.label}>
                 <td
@@ -718,6 +718,7 @@ function generateUniqueId() {
                     background: '#F5F5F5',
                   }}
                 >
+                  {/* Link to the interest */}
                   <a
                     href={item.url}
                     target="_blank"
@@ -730,9 +731,10 @@ function generateUniqueId() {
                   >
                     {item.label}
                   </a>
+                  {/* Textarea for notes */}
                   <TextareaAutosize
-                    rowsMin={1}
-                    rowsMax={10}
+                    rowsMin={1} // minimum number of lines
+                    rowsMax={10} //maximum number of lines
                     style={{
                       width: '100%',
                       padding: '8px',
@@ -745,6 +747,7 @@ function generateUniqueId() {
                     onChange={(e) => handleNotesChange(item.label, e.target.value)} // Handle notes change
                     
                   />
+                  {/* Delete button */}
                   <Button
                     style={{
                       position: 'static',
@@ -754,6 +757,7 @@ function generateUniqueId() {
                     onClick={() => showConfirmationPopupDeleteFromList(item)}
                   >
                     <FaTrash />
+                  {/* Add to interests button */}
                   </Button>
                   <Button
                     style={{

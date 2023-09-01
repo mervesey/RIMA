@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, CircularProgress, FormControl, FormControlLabel, FormLabel, Grid, Menu, MenuItem, Radio, RadioGroup, Typography } from '@material-ui/core';import FilterListIcon from '@material-ui/icons/FilterList';
 import GetNodeLink from './GetNodeLinkDiscover';
 import RestAPI from '../../../../../Services/api';
-// import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { IconButton } from '@mui/material';
 import { Box } from '@material-ui/core';
@@ -10,6 +9,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 const DiscoverPage = (props) => {
   const { data, interests, setInterests, setData } = props;
+  // State variables
   const [showPopup, setShowPopup] = useState(false);
   const [state, setState] = useState({
     openInterest: null,
@@ -22,7 +22,6 @@ const DiscoverPage = (props) => {
   });
   const [keywords, setKeywords] = useState([]);
   const [checkNewKeywords, setCheckNewKeywords] = useState(false);
-  // const [zoomFactor, setZoomFactor] = useState(1); // Zoomfaktor (Standard: 1)
 
   let currentUser = JSON.parse(localStorage.getItem('rimaUser'));
 
@@ -52,19 +51,18 @@ const DiscoverPage = (props) => {
   console.log(curInterests, "test fetch")
   return curInterests
 
-};
-// Restlicher Code ...
-const handleOpenPopup = () => {
-  setShowPopup(true);
-};
+  };
+  // set the state for opening the Popup
+  const handleOpenPopup = () => {
+    setShowPopup(true);
+  };
 
-const handleClosePopup = () => {
-  setShowPopup(false);
-};
+  //set the state for closing the Popup
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
 
-const handleInfoButtonClick = () => {
-  setState({ ...state, infoDialogOpen: true });
-};
+
 
   const compareInterests = async () => {
     setCheckNewKeywords(false)
@@ -259,13 +257,6 @@ const handleInfoButtonClick = () => {
 
     setState({...state, currCategoriesValue: currValuesCategories});
   };
-  // const reload2 = async (interest) => {
-  //     RestAPI.getRelatedNewTopics(interest).then(res=>{
-  //       const {data}=res
-  //       console.log(res, "Related")
-  //       console.log("done data Discover")
-  //        return res
-  //     })
 
   //Test
   const[blibla,setBliBla]=useState("");
@@ -283,7 +274,8 @@ const handleInfoButtonClick = () => {
   return (
     <>
       <Button onClick={Blibla}>Blibla</Button>
-      <Grid container justify="flex-end" style={{ paddingTop: 24, paddingBottom: 8 }}>
+      {/* */}
+      <Grid container justify="flex-end" style={{ paddingTop: 24, paddingBottom: 8 }}> 
          <Button startIcon={<FilterListIcon />} color="primary" onClick={handleOpenInterest}>
            Choose interest
         </Button>
@@ -293,7 +285,8 @@ const handleInfoButtonClick = () => {
          <IconButton aria-label="more information" color="primary" onClick={handleOpenPopup}>
           <InfoOutlinedIcon />
         </IconButton>
-      {showPopup && <Popup onClose={handleClosePopup} />}
+         {/* This will show or hide the popup based on the showPopup state */}
+         {showPopup && <Popup onClose={handleClosePopup} />}
         <Menu
           id="currInterestDiscover"
           anchorEl={state.openInterest}
@@ -367,6 +360,7 @@ const handleInfoButtonClick = () => {
   );
 };
 
+// Information Point Popup
 const Popup = ({ onClose }) => {
   return (
     <Box
@@ -383,12 +377,13 @@ const Popup = ({ onClose }) => {
           position: 'absolute',
           top: '10px',
           right: '10px',
-          color: '#172B4D',  // Blue close icon color
+          color: '#172B4D',  // Sets the close icon color to blue
         }}
       >
         <CloseIcon />
       </IconButton>
       <div>
+        {/* Information text */}
         <Typography variant="h6" style={{ marginBottom: '5px' }}>
           Information
         </Typography>
