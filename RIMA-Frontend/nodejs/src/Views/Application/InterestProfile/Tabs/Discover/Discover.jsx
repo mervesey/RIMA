@@ -258,23 +258,22 @@ const DiscoverPage = (props) => {
     setState({...state, currCategoriesValue: currValuesCategories});
   };
 
-  //Test
-  const[blibla,setBliBla]=useState("");
-  const Blibla=()=>{
+  // //Test
+  // const[blibla,setBliBla]=useState("");
+  // const Blibla=()=>{
     
-    RestAPI.getRelatedNewTopics({'data':'12'}).then(res=>{
-      const {data} = res;
-      const bli = {...data.data};
-      setBliBla(bli);
-    })
-    console.log(blibla, "Test test");
-  };
+  //   RestAPI.getRelatedNewTopics({'data':'12'}).then(res=>{
+  //     const {data} = res;
+  //     const bli = {...data.data};
+  //     setBliBla(bli);
+  //   })
+  //   console.log(blibla, "Test test");
+  // };
 
 
   return (
     <>
-      <Button onClick={Blibla}>Blibla</Button>
-      {/* */}
+      {/* Test <Button onClick={Blibla}>Blibla</Button> */}
       <Grid container justify="flex-end" style={{ paddingTop: 24, paddingBottom: 8 }}> 
          <Button startIcon={<FilterListIcon />} color="primary" onClick={handleOpenInterest}>
            Choose interest
