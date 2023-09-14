@@ -1,7 +1,7 @@
-<p align="center"><a href="https://rima.sc.inko.cloud/" target="_blank" rel="noopener noreferrer">
-<img height="120px" src="RIMA-Frontend/nodejs/public/images/rimaLogo.svg" alt="re-frame logo"></a></p>
+<p align="center">
+<img height="350px" src="RIMA-Frontend/nodejs/public/images/Logo.png" alt="re-frame logo"></a></p>
 
-# RIMA
+# Discover - grow your knowledge
 During our participation in the Interactive Data Exploration and Analytics (IDEA) lab course, we addressed the question of how to improve the Discover page on the RIMA platform to achieve the self-actualization goal Develop. To accomplish this, we made a variety of improvements to the platform's features based on insights from user experiences. Our work is aimed to help users in discovering new interests and advance  their personal development.
 
 ## Project Architecture
@@ -30,7 +30,7 @@ During our participation in the Interactive Data Exploration and Analytics (IDEA
 - Node Link Diagram after Reload
 <img height="400px" src="RIMA-Frontend/nodejs/public/images/NLD.png" alt="re-frame logo">
 
-- Favour List
+- Favourite interests List
 <img  src="RIMA-Frontend/nodejs/public/images/FavourList.png" alt="re-frame logo">
 
 - Panzoom
