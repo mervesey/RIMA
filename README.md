@@ -17,8 +17,30 @@ During our participation in the Interactive Data Exploration and Analytics (IDEA
 - **Cytoscape**: Employed for zoom panel functionality.
 
 ## Implemented changes and Screenshots 
+- Information Point
+<img src="RIMA-Frontend/nodejs/public/images/InformationPoint.png" alt="re-frame logo">
 
-## Group Member
+- Node Link Diagram
+<img height="400px" src="RIMA-Frontend/nodejs/public/images/NodeLinkDiagram.png">
+
+- Nodes Level 1 and Level 2
+<img height="200px" src="RIMA-Frontend/nodejs/public/images/NodeLevel1.png" alt="re-frame logo">
+<img height="220px" src="RIMA-Frontend/nodejs/public/images/NodeLevel2.png" alt="re-frame logo">
+
+- Node Link Diagram after Reload
+<img height="400px" src="RIMA-Frontend/nodejs/public/images/NLD.png" alt="re-frame logo">
+
+- Favour List
+<img  src="RIMA-Frontend/nodejs/public/images/FavourList.png" alt="re-frame logo">
+
+- Panzoom
+<img height="160px" src="RIMA-Frontend/nodejs/public/images/Panzoom.png" alt="re-frame logo">
+
+- Pop up from Sweetalert
+<img height="120px" src="RIMA-Frontend/nodejs/public/images/Popup.png" alt="re-frame logo">
+
+
+## Group Members
 - Mervenur Seyhan
 - Helin Bas
 - Izem Uyaner
